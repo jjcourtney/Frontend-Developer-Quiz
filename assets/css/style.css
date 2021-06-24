@@ -49,7 +49,7 @@ main h1 {
 }
 
 
-.startBtn{
+.start-btn{
     background-color: var(--color-dark);
     color: var(--colour-light);
     padding: 0.5rem;
