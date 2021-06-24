@@ -26,12 +26,12 @@ const questionsArr =[
 },
 {
     question: "Which character is used to represent the closing of a tag in HTML?",
-    correctAnswer: "<" ,
-    incorrectAnswersArr: [".", "\\", "!"]
+    correctAnswer: "/" ,
+    incorrectAnswersArr: [".", "<", "!"]
 },
 {
     question: "How to create a hyperlink in HTML?",
-    correctAnswer: "<a href = \"www.javatpoint.com\"> javaTpoint.com <<a>",
+    correctAnswer: "<a href = \"www.javatpoint.com\"> javaTpoint.com <a>",
     incorrectAnswersArr: ["<a url = \"www.javatpoint.com\" javaTpoint.com <a>", "<a link = \"www.javatpoint.com\"> javaTpoint.com <<a>", "<a> www.javatpoint.com <javaTpoint.com <a>"]
 },
 {
@@ -72,8 +72,14 @@ const questionsArr =[
 {
     question: "In HTML5, which of the following tag is used to initialize the document type?",
     correctAnswer: "<!DOCTYPE html>",
-    incorrectAnswersArr: ["<Doctype HTML>", "<\Doctype html>", "<Doctype>"]
+    incorrectAnswersArr: ["<Doctype HTML>", "<\\Doctype html>", "<Doctype>"]
 }]
+
+let emptyQuestionObj = {
+    question: "",
+    correctAnswer: "",
+    incorrectAnswersArr: ["", "", ""]
+}
 
 /*
 // example of the question object 
@@ -91,11 +97,14 @@ let playerScore = 0;
 let timerValue = 90; //seconds
 const startBtn = document.getElementById("start-btn");
 const quizDiv = document.getElementById("quiz-box");
-let currentQuestionIndex = 0;
+let currentQuestionIndex;
 let correctAnswerIndex;
 
 function endGame(){
-    //
+    quizDiv.innerHTML = `You scored ${playerScore}<br>
+    would you like to save?
+    <button>Yes</button><button onclick="location.reload();">no</button>`;
+
 }
 
 function startTimer(){
@@ -116,23 +125,21 @@ function writeHTML(id, htmlToWrite){
     elToUpdate.innerHTML = htmlToWrite;
 }
 
-function getQuestion(){
-  
+function setQuestion(){
+    questionsArr.splice(currentQuestionIndex, 1);
+    
     currentQuestionIndex  = getRandomIndex(questionsArr.length - 1);
 
-    let questionObj = questionsArr[currentQuestionIndex];
+    if (questionsArr.length == 1){
+        endGame();
 
-    // remove current question from question array to
-    // prevent repeating question
-    questionsArr.splice(currentQuestionIndex, 1);
-
-     return questionObj;
+    }  
 }
 
-
 function prepareQuestionReturnAnswer(){
-    
-    let currentquestionObj = getQuestion();
+
+    setQuestion()
+    let currentquestionObj = questionsArr[currentQuestionIndex];
     // create an array with correct 
     let answersArray = [];
     // create an array of incorrect answers
@@ -140,23 +147,23 @@ function prepareQuestionReturnAnswer(){
 
     // iterate over incorrect answers and add to answers array
     // leaving correct answer at index 0
-    for (let i = 0; i < 4; i++){
+    for (let i = 0; i < 3; i++){
 
-        let currentIncorrectAnswerIndex = getRandomIndex(incorrectAnswersArr.length);
-        let currentIncorrectAnwser = incorrectAnswersArr[currentIncorrectAnswerIndex];
-        answersArray.push(currentIncorrectAnwser);
-        incorrectAnswersArr.splice(currentIncorrectAnswerIndex, 1)
+        answersArray.unshift(incorrectAnswersArr[i])
+       
+ 
     }
     // place correct answer in random index
     // storing position in a global variable
     correctAnswerIndex = getRandomIndex(4);
     answersArray.splice(correctAnswerIndex, 0, currentquestionObj.correctAnswer)
-    
+
     return answersArray;
     
 }
 
 function decreaseTimer(amount = 1){
+    timerValue -= amount;
     isTimerGreaterThenZero = timerValue > 0;
     // decrease timer
     if (!isTimerGreaterThenZero){
@@ -164,7 +171,6 @@ function decreaseTimer(amount = 1){
         endGame();
         return;
     }
-    timerValue -= amount;
     writeHTML("timer", `${timerValue} second(s) left.`);
 }
 
@@ -228,7 +234,10 @@ function createQandAHTML(){
     // startBtn.style.display = "none"; //to remove after testing
     //console.log(prepareQuestionReturnAnswer())
     let answerArr = prepareQuestionReturnAnswer();
+    quizDiv.innerHTML = "";
     
+   
+
     let question = questionsArr[currentQuestionIndex].question; 
     // create, ammend, append
 
@@ -296,10 +305,10 @@ function createQandAHTML(){
 
 function quizDivClicked(event){
     // answerSelected()
-    console.log("quizDivClicked");
-    console.log(event.target);
+    //console.log("quizDivClicked");
+    //console.log(event.target);
     splitId = event.target.id.split("-");
-    console.log(splitId)
+    //console.log(splitId)
     
 
     if (splitId[0] == "letter" || splitId[0] == "string"){
@@ -314,7 +323,7 @@ function answerSelected(letterClicked){
     // console.log("answerSelected", letterClicked)
 
     indexClicked = letterToIndex(letterClicked);
-    console.log("index clickd", indexClicked);
+    //console.log("index clicked", indexClicked);
 
 
     if (indexClicked == correctAnswerIndex){
@@ -323,6 +332,7 @@ function answerSelected(letterClicked){
         decreaseTimer(10);
     }
     
+    createQandAHTML()
 
 
 }
