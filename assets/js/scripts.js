@@ -75,7 +75,7 @@ const questionsArr =[
     incorrectAnswersArr: ["<Doctype HTML>", "<\Doctype html>", "<Doctype>"]
 }]
 
-
+/*
 // example of the question object 
 const exampleQuestionObj = {
     question: "What is CSS?",
@@ -85,7 +85,7 @@ const exampleQuestionObj = {
 
 // example array of the posible aswers 
 let exampleAnswerArr = ["Cascading style sheet", "A JavaScript library","Creating C#","A type of browser"]
-
+*/
 
 let playerScore = 0;
 let timerValue = 90; //seconds
@@ -183,6 +183,46 @@ function getHighScore(){
     return highScore;
 }
 
+function indexToLetter(index){
+    let letter = "a";
+
+    switch(index) {
+        case 1 : 
+            currentLetter = "b";
+            break;
+        case 2 : 
+            currentLetter = "c";
+            break;
+        case 3 : 
+            currentLetter = "d";
+            break;
+
+    }
+    return letter;
+}
+
+function letterToIndex(letter){
+    let index;
+
+    switch(letter) {
+        case "a":
+            index = 0;
+            break;
+        case "b" : 
+            index = 1;
+            break;
+        case "c" : 
+            index = 2;
+            break;
+        case "d" : 
+            index = 3;
+            break;
+        default:
+            break;
+    }
+    return index;
+}
+
 function createQandAHTML(){
     //console.log("Called createQandAHTML")
     // startBtn.style.display = "none"; //to remove after testing
@@ -250,16 +290,47 @@ function createQandAHTML(){
         answerString.textContent = currentAnswerString;
         currentAnswerContainer.appendChild(answerString);
     }
+    
 
 }
 
-function answerSelected(){
+function quizDivClicked(event){
+    // answerSelected()
+    console.log("quizDivClicked");
+    console.log(event.target);
+    splitId = event.target.id.split("-");
+    console.log(splitId)
+    
+
+    if (splitId[0] == "letter" || splitId[0] == "string"){
+        answerSelected(splitId[1])
+    }
+    
+}
+
+function answerSelected(letterClicked){
+
     //    createQandAHTML();
+    // console.log("answerSelected", letterClicked)
+
+    indexClicked = letterToIndex(letterClicked);
+    console.log("index clickd", indexClicked);
+
+
+    if (indexClicked == correctAnswerIndex){
+        changeScore(1);
+    }else{
+        decreaseTimer(10);
+    }
+    
+
+
 }
 
 function startGame(){
     startBtn.style.display = "none";
     createQandAHTML();
+    quizDiv.addEventListener("click", quizDivClicked)
     startTimer();
     changeScore();
 
@@ -267,4 +338,5 @@ function startGame(){
 }
 
 startBtn.addEventListener("click", startGame);
+
 
