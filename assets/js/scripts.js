@@ -75,15 +75,20 @@ const questionsArr =[{
     incorrectAnswersArr: ["&lt;Doctype HTML&gt;", "&lt;\Doctype html&gt;", "&lt;Doctype&gt;"]
 }]
 
-//example of the question object 
+// example of the question object 
 const exampleQuestionObj = {
     question: "What is CSS?",
-    correctAnswer: "Cascading style sheets",
+    correctAnswer: "Cascading style sheet",
     incorrectAnswersArr: ["A JavaScript library","Creating C#","A type of browser"]
 }
 
+// example array of the posible aswers 
+let exampleAnswerArr = ["Cascading style sheet", "A JavaScript library","Creating C#","A type of browser"]
+
 let playerScore = 0;
 let timerValue = 90; //seconds
+const startBtn = document.getElementById("start-btn");
+const quizDiv = document.getElementById("quiz-box");
 
 function endGame(){
     //
@@ -116,7 +121,7 @@ function getQuestion(){
 }
 
 function prepareQuestion(){
-    
+
 }
 
 function decreaseTimer(amount = 1){
@@ -139,13 +144,82 @@ function getHighScore(){
 }
 
 function createQandAHTML(){
+    startBtn.style.display = "none"; //to remove after testing
+    let question = exampleQuestionObj.question; 
     // create, ammend, append
+
+    // question
+    questionH1 = document.createElement("h1");
+    questionH1.textContent = question;
+    quizDiv.appendChild(questionH1);
+
+    // answers
+
+    // div to contain all the containers for the answers
+    answersDiv =  document.createElement("div");
+    answersDiv.id = "answers-div";
+    quizDiv.appendChild(answersDiv);
+    currentAnswersDiv = document.getElementById("answers-div");
+    // loop for each answer
+    // Limit to 4 answers
+
+    for (let i = 0; i < exampleAnswerArr.length && i < 4; i++){
+        
+        // Answer letter depending on i
+
+        let currentLetter = "A";
+
+        switch(i) {
+            case 1 : 
+                currentLetter = "B";
+                break;
+            case 2 : 
+                currentLetter = "C";
+                break;
+            case 3 : 
+                currentLetter = "D";
+                break;
+
+        }
+
+        // Add the container for the answers
+        let answerContainer = document.createElement("div");
+        answerContainer.className = "answer-container";
+        answerContainer.id = `answer-container-${currentLetter.toLowerCase()}`;
+        currentAnswersDiv.appendChild(answerContainer);
+
+        // create referance to newest container
+        currentAnswerContainer = document.getElementById(`answer-container-${currentLetter.toLowerCase()}`);
+
+        // Answers letter div
+        let answerLetter = document.createElement("div");
+        answerLetter.className = "answer-letter shadow";
+        answerLetter.id = `letter-${currentLetter.toLowerCase()}`
+        answerLetter.textContent = currentLetter;
+        currentAnswerContainer.appendChild(answerLetter);
+
+        // Answers string div
+        let currentAnswerString = exampleAnswerArr[i];
+        let answerString = document.createElement("div");
+        answerString.className = "answer-string";
+        answerString.id = `string-${currentLetter.toLowerCase()}`
+        answerString.textContent = currentAnswerString;
+        currentAnswerContainer.appendChild(answerString);
+    }
+
 }
 
 function displayQandA(){
     // update questions and posible answers
 }
 
+function startGame(){
+    startBtn.style.display = "none";
+    createQandAHTML();
+    // startTimer();
 
 
+}
+
+startBtn.addEventListener("click", startGame);
 
