@@ -85,22 +85,23 @@ const exampleQuestionObj = {
 // example array of the posible aswers 
 let exampleAnswerArr = ["Cascading style sheet", "A JavaScript library","Creating C#","A type of browser"]
 
+
 let playerScore = 0;
 let timerValue = 90; //seconds
 const startBtn = document.getElementById("start-btn");
 const quizDiv = document.getElementById("quiz-box");
+let currentQuestionIndex = 0;
 
 function endGame(){
     //
 }
 
 function startTimer(){
-    //while loop for timer
-    while(timerValue > 0){
-        setInterval(decreaseTimer, 1000);
-    }
-    endGame();
+    // 1000 ms = 1 second
+    setInterval(decreaseTimer, 1000);
 }
+    
+
 
 function getRandomIndex(numberOfIndexes){
     randomInd = Math.floor(Math.random() * numberOfIndexes);
@@ -114,25 +115,36 @@ function writeHTML(id, htmlToWrite){
 }
 
 function getQuestion(){
-    let questionIndex = getRandomIndex(questionsArr.length);
-    let questionObj = questionsArr[questionIndex];
+    currentQuestionIndex  = getRandomIndex(questionsArr.length);
+    let questionObj = questionsArr[currentQuestionIndex];
+    
 
     return questionObj;
 }
 
 function prepareQuestion(){
 
+
+    
 }
 
 function decreaseTimer(amount = 1){
+    isTimerGreaterThenZero = timerValue > 0;
     // decrease timer
+    if (!isTimerGreaterThenZero){
+        writeHTML("timer", `time's up!`);
+        endGame();
+        return;
+    }
     timerValue -= amount;
-    writeHTML("timer", `${timerValue} seconds left.`)
+    writeHTML("timer", `${timerValue} second(s) left.`);
 }
 
 
-function changeScore(amountToChangeBy){
+function changeScore(amountToChangeBy = 0){
     playerScore += amountToChangeBy;
+    writeHTML("currentScore", `Current score: ${playerScore}`);
+
 }
 function saveScore(){
    // window.localStorage
@@ -216,7 +228,8 @@ function displayQandA(){
 function startGame(){
     startBtn.style.display = "none";
     createQandAHTML();
-    // startTimer();
+    startTimer();
+    changeScore();
 
 
 }
