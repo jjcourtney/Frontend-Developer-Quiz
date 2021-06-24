@@ -1,58 +1,58 @@
 // An array of all the questions 
-const questionsArr =[{
-    question: "HTML stands for?",
+const questionsArr =[
+    {question: "HTML stands for?",
     correctAnswer: "Hyper Text Markup Language",
     incorrectAnswersArr: ["High Text Markup Language", "Hyper Tabular Markup Language", "None of these"]
 },
 {
     question: "Which of the following tag is used to mark a beginning of paragraph?",
-    correctAnswer: "&lt;P&gt;",
-    incorrectAnswersArr: ["&lt;TD&gt;", "&lt;br&gt;", "&lt;TR&gt;"]
+    correctAnswer: "<P>",
+    incorrectAnswersArr: ["<TD>", "<br>", "<TR>"]
 },
 {
     question: "From which tag descriptive list starts?",
-    correctAnswer: "&lt;DL&gt;",
-    incorrectAnswersArr: ["&lt;DS&gt;", "&lt;LL&gt;", "&lt;DD&gt;"]
+    correctAnswer: "<DL>",
+    incorrectAnswersArr: ["<DS>", "<LL>", "<DD>"]
 },
 {
     question: "Correct HTML tag for the largest heading is",
-    correctAnswer: "D&lt;h1&gt;",
-    incorrectAnswersArr: ["&lt;head&gt;", "&lt;h6&gt;", "&lt;heading&gt;"]
+    correctAnswer: "<h1>",
+    incorrectAnswersArr: ["<head>", "<h6>", "<heading>"]
 },
 {
     question: "How to create an unordered list (a list with the list items in bullets) in HTML?",
-    correctAnswer: "&lt;ul&gt;",
-    incorrectAnswersArr: ["&lt;ol&gt;", "&lt;li&gt;", "&lt;i&gt;"]
+    correctAnswer: "<ul>",
+    incorrectAnswersArr: ["<ol>", "<li>", "<i>"]
 },
 {
     question: "Which character is used to represent the closing of a tag in HTML?",
-    correctAnswer: "&lt;" ,
-    incorrectAnswersArr: [".", "&bsol;", "!"]
+    correctAnswer: "<" ,
+    incorrectAnswersArr: [".", "\\", "!"]
 },
 {
     question: "How to create a hyperlink in HTML?",
-    correctAnswer: "&lt;a href = &quot;www.javatpoint.com&quot;&gt; javaTpoint.com &lt;&lt;a&gt;",
-    incorrectAnswersArr: ["&lt;a url = &quot;www.javatpoint.com&quot; javaTpoint.com &lt;a&gt;", "&lt;a link = &quot;www.javatpoint.com&quot;&gt; javaTpoint.com &lt;&lt;a&gt;", "&lt;a&gt; www.javatpoint.com &lt;javaTpoint.com &lt;a&gt;"]
+    correctAnswer: "<a href = \"www.javatpoint.com\"> javaTpoint.com <<a>",
+    incorrectAnswersArr: ["<a url = \"www.javatpoint.com\" javaTpoint.com <a>", "<a link = \"www.javatpoint.com\"> javaTpoint.com <<a>", "<a> www.javatpoint.com <javaTpoint.com <a>"]
 },
 {
     question: "How to create an ordered list (a list with the list items in numbers) in HTML?",
-    correctAnswer: "&lt;ol&gt;",
-    incorrectAnswersArr: ["&lt;ul&gt;", "&lt;li&gt;", "&lt;i&gt;"]
+    correctAnswer: "<ol>",
+    incorrectAnswersArr: ["<ul>", "<li>", "<i>"]
 },
 {
     question: "How to insert an image in HTML?",
-    correctAnswer: "&lt;img src = &quot;image.png&quot; &lt;&gt;",
-    incorrectAnswersArr: ["&lt;img href = &quot;image.png&quot; &lt;&gt;", "&lt;img url = &quot;image.png&quot; &lt;&gt;", "&lt;img link = &quot;image.png&quot; &lt;&gt;"]
+    correctAnswer: "<img src = \"image.png\" >",
+    incorrectAnswersArr: ["<img href = \"image.png\" >", "<img url = \"image.png\" >", "<img link = \"image.png\" >"]
 },
 {
     question: "How to create a checkbox in HTML?",
-    correctAnswer: "&lt;input type = &quot;checkbox&quot;&gt;",
-    incorrectAnswersArr: ["&lt;input type = &quot;button&quot;&gt;", "&lt;checkbox&gt;", "&lt;input type = &quot;check&quot;&gt;"]
+    correctAnswer: "<input type = \"checkbox\">",
+    incorrectAnswersArr: ["<input type = \"button\">", "<checkbox>", "<input type = \"check\">"]
 },
 {
     question: "Which of the following is the paragraph tag in HTML?",
-    correctAnswer: "&lt;p&gt;",
-    incorrectAnswersArr: ["&lt;b&gt;", "&lt;pre&gt;", "None of these."]
+    correctAnswer: "<p>",
+    incorrectAnswersArr: ["<b>", "<pre>", "None of these."]
 },
 {
     question: "A program in HTML can be rendered and read by -",
@@ -66,14 +66,15 @@ const questionsArr =[{
 },
 {
     question: "Which of the following is the root tag of the HTML document?",
-    correctAnswer: "&lt;html&gt;",
-    incorrectAnswersArr: ["&lt;body&gt;", "&lt;head&gt;", "&lt;title&gt;"]
+    correctAnswer: "<html>",
+    incorrectAnswersArr: ["<body>", "<head>", "<title>"]
 },
 {
     question: "In HTML5, which of the following tag is used to initialize the document type?",
-    correctAnswer: "&lt;!DOCTYPE html&gt;",
-    incorrectAnswersArr: ["&lt;Doctype HTML&gt;", "&lt;\Doctype html&gt;", "&lt;Doctype&gt;"]
+    correctAnswer: "<!DOCTYPE html>",
+    incorrectAnswersArr: ["<Doctype HTML>", "<\Doctype html>", "<Doctype>"]
 }]
+
 
 // example of the question object 
 const exampleQuestionObj = {
@@ -91,6 +92,7 @@ let timerValue = 90; //seconds
 const startBtn = document.getElementById("start-btn");
 const quizDiv = document.getElementById("quiz-box");
 let currentQuestionIndex = 0;
+let correctAnswerIndex;
 
 function endGame(){
     //
@@ -106,7 +108,7 @@ function startTimer(){
 function getRandomIndex(numberOfIndexes){
     randomInd = Math.floor(Math.random() * numberOfIndexes);
 
-    return numberOfIndexes;
+    return randomInd;
 }
 
 function writeHTML(id, htmlToWrite){
@@ -115,16 +117,42 @@ function writeHTML(id, htmlToWrite){
 }
 
 function getQuestion(){
-    currentQuestionIndex  = getRandomIndex(questionsArr.length);
-    let questionObj = questionsArr[currentQuestionIndex];
-    
+  
+    currentQuestionIndex  = getRandomIndex(questionsArr.length - 1);
 
-    return questionObj;
+    let questionObj = questionsArr[currentQuestionIndex];
+
+    // remove current question from question array to
+    // prevent repeating question
+    questionsArr.splice(currentQuestionIndex, 1);
+
+     return questionObj;
 }
 
-function prepareQuestion(){
 
+function prepareQuestionReturnAnswer(){
+    
+    let currentquestionObj = getQuestion();
+    // create an array with correct 
+    let answersArray = [];
+    // create an array of incorrect answers
+    let incorrectAnswersArr = currentquestionObj.incorrectAnswersArr
 
+    // iterate over incorrect answers and add to answers array
+    // leaving correct answer at index 0
+    for (let i = 0; i < 4; i++){
+
+        let currentIncorrectAnswerIndex = getRandomIndex(incorrectAnswersArr.length);
+        let currentIncorrectAnwser = incorrectAnswersArr[currentIncorrectAnswerIndex];
+        answersArray.push(currentIncorrectAnwser);
+        incorrectAnswersArr.splice(currentIncorrectAnswerIndex, 1)
+    }
+    // place correct answer in random index
+    // storing position in a global variable
+    correctAnswerIndex = getRandomIndex(4);
+    answersArray.splice(correctAnswerIndex, 0, currentquestionObj.correctAnswer)
+    
+    return answersArray;
     
 }
 
@@ -156,8 +184,12 @@ function getHighScore(){
 }
 
 function createQandAHTML(){
-    startBtn.style.display = "none"; //to remove after testing
-    let question = exampleQuestionObj.question; 
+    //console.log("Called createQandAHTML")
+    // startBtn.style.display = "none"; //to remove after testing
+    //console.log(prepareQuestionReturnAnswer())
+    let answerArr = prepareQuestionReturnAnswer();
+    
+    let question = questionsArr[currentQuestionIndex].question; 
     // create, ammend, append
 
     // question
@@ -175,7 +207,7 @@ function createQandAHTML(){
     // loop for each answer
     // Limit to 4 answers
 
-    for (let i = 0; i < exampleAnswerArr.length && i < 4; i++){
+    for (let i = 0;/* i < answerArr.length &&*/ i < 4; i++){
         
         // Answer letter depending on i
 
@@ -211,7 +243,7 @@ function createQandAHTML(){
         currentAnswerContainer.appendChild(answerLetter);
 
         // Answers string div
-        let currentAnswerString = exampleAnswerArr[i];
+        let currentAnswerString = answerArr[i];
         let answerString = document.createElement("div");
         answerString.className = "answer-string";
         answerString.id = `string-${currentLetter.toLowerCase()}`
@@ -221,8 +253,8 @@ function createQandAHTML(){
 
 }
 
-function displayQandA(){
-    // update questions and posible answers
+function answerSelected(){
+    //    createQandAHTML();
 }
 
 function startGame(){
