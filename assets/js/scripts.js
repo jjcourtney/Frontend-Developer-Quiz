@@ -99,22 +99,29 @@ const startBtn = document.getElementById("start-btn");
 const quizDiv = document.getElementById("quiz-box");
 let currentQuestionIndex;
 let correctAnswerIndex;
+let invervalTimer;
 const highScoreDiv = document.getElementById("highscore");
 
 function endGame(){
+
+   
     quizDiv.innerHTML = `You scored ${playerScore}<br>
     would you like to save?
     <button id="saveScore">Yes</button><button onclick="location.reload();">no</button>`;
     saveScoreBtn = document.getElementById("saveScore");
     saveScoreBtn.addEventListener("click", saveScore)
+    stopTimer();
 }
 
 function startTimer(){
     // 1000 ms = 1 second
-    setInterval(decreaseTimer, 1000);
+   timerInterval = setInterval(decreaseTimer, 1000);
 }
     
+function stopTimer(){
 
+    clearInterval(timerInterval);
+}
 
 function getRandomIndex(numberOfIndexes){
     randomInd = Math.floor(Math.random() * numberOfIndexes);
@@ -164,9 +171,15 @@ function prepareQuestionReturnAnswer(){
 }
 
 function decreaseTimer(amount = 1){
+    if (amount > timerValue){
+        timerValue = 0;
+    }else{
     timerValue -= amount;
+    }
+
     isTimerGreaterThenZero = timerValue > 0;
     // decrease timer
+    
     if (!isTimerGreaterThenZero){
         writeHTML("timer", `time's up!`);
         endGame();
@@ -330,8 +343,12 @@ function quizDivClicked(event){
     //console.log(splitId)
     
 
-    if (splitId[0] == "letter" || splitId[0] == "string"){
+    if (splitId[0] == "letter" || splitId[0] == "string") {
         answerSelected(splitId[1])
+    }
+    // bug fix click on incorrect answer after timer hit 0
+    if (timerValue <= 0){
+        endGame();
     }
     
 }
