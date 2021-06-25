@@ -74,13 +74,15 @@ const questionsArr =[
     correctAnswer: "<!DOCTYPE html>",
     incorrectAnswersArr: ["<Doctype HTML>", "<\\Doctype html>", "<Doctype>"]
 }]
-// for testing
 
+// for testing
+/*
 let emptyQuestionObj = {
     question: "",
     correctAnswer: "",
     incorrectAnswersArr: ["", "", ""]
 }
+*/
 
 // Declaring variables
 
@@ -94,90 +96,18 @@ let invervalTimer;
 const highScoreDiv = document.getElementById("highscore");
 
 
-// called once quiz is finnished
-
-function openSaveBox(){
-
-    quizDiv.innerHTML = "";
-
-    let saveH1 = document.createElement("h1");
-    saveH1.textContent = `You scored ${playerScore}
-    would you like to save?`
-    quizDiv.append(saveH1);
-
-    let contYesNo = document.createElement("div");
-    contYesNo.id= "container-y-n";
-    quizDiv.appendChild(contYesNo);
-
-    let btnSave = document.createElement("button");
-    btnSave.id= "save-score";
-    btnSave.textContent = "Yes"
-    contYesNo.appendChild(btnSave);
-
-    let btnRefresh = document.createElement("button");
-    btnRefresh.id= "btn-refresh";
-    btnRefresh.textContent = "No"
-    contYesNo.appendChild(btnRefresh);
-
-    
-    btnSave.addEventListener("click", openRecordScore);
-    btnRefresh.addEventListener("click", refreshQuiz);
-
-}
-
-function refreshQuiz() {
-    location.reload();
-}
-
 function startTimer(){
     // 1000 ms = 1 second
    timerInterval = setInterval(decreaseTimer, 1000);
 }
-    
+
 function stopTimer(){
 
     clearInterval(timerInterval);
 }
 
-function endGame(){
-
-    openSaveBox();
-    stopTimer();
-
-}
-
-function openRecordScore(){
-
-    let mainDiv = document.getElementById("main");
-    mainDiv.innerHTML = "";
-
-    let divRecordIntials = document.createElement("div")
-    divRecordIntials.setAttribute("id", "div-record-highscore")
-    mainDiv.appendChild(divRecordIntials);
-    
-    let recordScoreForm = document.createElement("form");
-    recordScoreForm.setAttribute("action", "#")
-    divRecordIntials.appendChild(recordScoreForm);
-
-    let recordScoreLabel = document.createElement("label");
-    recordScoreLabel.setAttribute("for", "intials");
-    recordScoreLabel.textContent = "Please enter you intials";
-    recordScoreForm.appendChild(recordScoreLabel)
-
-    let recordScoreInput = document.createElement("input");
-    recordScoreInput.setAttribute("id", "intials");
-    recordScoreInput.setAttribute("name", "intials");
-    recordScoreInput.setAttribute("type", "text");
-    recordScoreInput.setAttribute("maxlength", "3");
-    recordScoreForm.appendChild(recordScoreInput);
-
-    let recordScoreButton = document.createElement("input");
-    recordScoreButton.setAttribute("type", "submit");
-    recordScoreButton.setAttribute("id", "intitals-submit");
-    recordScoreButton.setAttribute("value", "Submit");
-    recordScoreForm.appendChild(recordScoreButton);
-
-    recordScoreForm.addEventListener("submit", saveScore);
+function refreshQuiz() {
+    location.reload();
 }
 
 function getRandomIndex(numberOfIndexes){
@@ -191,11 +121,138 @@ function writeHTML(id, htmlToWrite){
     elToUpdate.innerHTML = htmlToWrite;
 }
 
+function letterToIndex(letter){
+    let index;
+
+    switch(letter) {
+        case "a":
+            index = 0;
+            break;
+        case "b" : 
+            index = 1;
+            break;
+        case "c" : 
+            index = 2;
+            break;
+        case "d" : 
+            index = 3;
+            break;
+        default:
+            break;
+    }
+    return index;
+}
+
+function openSaveBox(){
+
+    // clear div
+    quizDiv.innerHTML = "";
+
+    // give player their final score
+    let saveH1 = document.createElement("h1");
+    saveH1.textContent = `You scored ${playerScore}
+    would you like to save?`
+    quizDiv.append(saveH1);
+
+    //container for answer to save or not
+    let contYesNo = document.createElement("div");
+    contYesNo.id= "container-y-n";
+    quizDiv.appendChild(contYesNo);
+
+    // button to load form to save score
+    let btnSave = document.createElement("button");
+    btnSave.id= "save-score";
+    btnSave.textContent = "Yes"
+    contYesNo.appendChild(btnSave);
+
+    // refeshesh the page / quiz
+    let btnRefresh = document.createElement("button");
+    btnRefresh.id= "btn-refresh";
+    btnRefresh.textContent = "No"
+    contYesNo.appendChild(btnRefresh);
+
+    
+    btnSave.addEventListener("click", openRecordScore);
+    btnRefresh.addEventListener("click", refreshQuiz);
+
+}
+
+function endGame(){
+
+    openSaveBox();
+    stopTimer();
+
+}
+
+function saveScore(event){
+    
+    event.preventDefault();
+
+    let highScoresArr = getHighScores();
+    let playerInitals = document.getElementById("intials").value;
+
+    // add to begining of array so later when iterating the last score interated over (with increasing index) will
+    // be the oldest therefore if 2 high scores are the same the oldest will be kept
+    highScoresArr.unshift([playerScore, playerInitals]);
+
+    // using local storage to store string representing an array of high scores.
+    localStorage.setItem("highScores", JSON.stringify(highScoresArr));
+
+
+    refreshQuiz();
+
+    
+}
+    
+function openRecordScore(){
+
+    // Create amend append
+    // new main div
+    let mainDiv = document.getElementById("main");
+    mainDiv.innerHTML = "";
+
+    // new container for form
+    let divRecordIntials = document.createElement("div")
+    divRecordIntials.setAttribute("id", "div-record-highscore")
+    mainDiv.appendChild(divRecordIntials);
+    
+    // new form to take input for players initials
+    let recordScoreForm = document.createElement("form");
+    recordScoreForm.setAttribute("action", "#")
+    divRecordIntials.appendChild(recordScoreForm);
+
+    // label of input for players initials
+    let recordScoreLabel = document.createElement("label");
+    recordScoreLabel.setAttribute("for", "intials");
+    recordScoreLabel.textContent = "Please enter you intials";
+    recordScoreForm.appendChild(recordScoreLabel)
+
+    // label of input for players initials
+    let recordScoreInput = document.createElement("input");
+    recordScoreInput.setAttribute("id", "intials");
+    recordScoreInput.setAttribute("name", "intials");
+    recordScoreInput.setAttribute("type", "text");
+    recordScoreInput.setAttribute("maxlength", "3");
+    recordScoreForm.appendChild(recordScoreInput);
+
+    // submit button for form
+    let recordScoreButton = document.createElement("input");
+    recordScoreButton.setAttribute("type", "submit");
+    recordScoreButton.setAttribute("id", "intitals-submit");
+    recordScoreButton.setAttribute("value", "Submit");
+    recordScoreForm.appendChild(recordScoreButton);
+
+    recordScoreForm.addEventListener("submit", saveScore);
+}
+
 function setQuestion(){
+    // remove last question to stop repeating questions
     questionsArr.splice(currentQuestionIndex, 1);
     
+    //select a random question
     currentQuestionIndex  = getRandomIndex(questionsArr.length - 1);
 
+    // leave on in array to prevent bugs on calls made after last question removed
     if (questionsArr.length == 1){
         endGame();
 
@@ -228,6 +285,9 @@ function prepareQuestionReturnAnswer(){
 }
 
 function decreaseTimer(amount = 1){
+
+    // decrease to zero when timer to deducted is greater than current time left
+
     if (amount > timerValue){
         timerValue = 0;
     }else{
@@ -246,6 +306,7 @@ function decreaseTimer(amount = 1){
 }
 
 function changeScore(amountToChangeBy = 0){
+
     playerScore += amountToChangeBy;
     writeHTML("currentScore", `Current score: ${playerScore}`);
 
@@ -266,42 +327,6 @@ function getHighScores(){
     }
   
     return highScores;
-}
-
-function saveScore(event){
-    event.preventDefault();
-
-    let highScoresArr = getHighScores();
-    let playerInitals = document.getElementById("intials").value;
-    highScoresArr.unshift([playerScore, playerInitals]);
-    localStorage.setItem("highScores", JSON.stringify(highScoresArr));
-
-
-    refreshQuiz();
-
-    
-}
-
-function letterToIndex(letter){
-    let index;
-
-    switch(letter) {
-        case "a":
-            index = 0;
-            break;
-        case "b" : 
-            index = 1;
-            break;
-        case "c" : 
-            index = 2;
-            break;
-        case "d" : 
-            index = 3;
-            break;
-        default:
-            break;
-    }
-    return index;
 }
 
 function createQandAHTML(){
@@ -375,32 +400,9 @@ function createQandAHTML(){
 
 }
 
-function quizDivClicked(event){
-    // answerSelected()
-    //console.log("quizDivClicked");
-    //console.log(event.target);
-    splitId = event.target.id.split("-");
-    //console.log(splitId)
-    
-
-    if (splitId[0] == "letter" || splitId[0] == "string") {
-        answerSelected(splitId[1])
-    }
-    // bug fix click on incorrect answer after timer hit 0
-    if (timerValue <= 0){
-        endGame();
-    }
-    
-}
-
 function answerSelected(letterClicked){
 
-    //    createQandAHTML();
-    // console.log("answerSelected", letterClicked)
-
     indexClicked = letterToIndex(letterClicked);
-    //console.log("index clicked", indexClicked);
-
 
     if (indexClicked == correctAnswerIndex){
         changeScore(1);
@@ -411,6 +413,20 @@ function answerSelected(letterClicked){
     createQandAHTML()
 
 
+}
+
+function quizDivClicked(event){
+
+    splitId = event.target.id.split("-");
+
+    if (splitId[0] == "letter" || splitId[0] == "string") {
+        answerSelected(splitId[1])
+    }
+    // bug fix click on incorrect answer after timer hit 0
+    if (timerValue <= 0){
+        endGame();
+    }
+    
 }
 
 function updateCurrentHighScore(){
@@ -431,8 +447,10 @@ function updateCurrentHighScore(){
 }
 
 function startGame(){
+
     startBtn.style.display = "none";
     createQandAHTML();
+    
     quizDiv.addEventListener("click", quizDivClicked)
     startTimer();
     changeScore();
@@ -440,8 +458,7 @@ function startGame(){
 
 }
 
-updateCurrentHighScore()
-
+updateCurrentHighScore();
 startBtn.addEventListener("click", startGame);
 
 
