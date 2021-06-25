@@ -74,6 +74,7 @@ const questionsArr =[
     correctAnswer: "<!DOCTYPE html>",
     incorrectAnswersArr: ["<Doctype HTML>", "<\\Doctype html>", "<Doctype>"]
 }]
+// for testing
 
 let emptyQuestionObj = {
     question: "",
@@ -81,17 +82,7 @@ let emptyQuestionObj = {
     incorrectAnswersArr: ["", "", ""]
 }
 
-/*
-// example of the question object 
-const exampleQuestionObj = {
-    question: "What is CSS?",
-    correctAnswer: "Cascading style sheet",
-    incorrectAnswersArr: ["A JavaScript library","Creating C#","A type of browser"]
-}
-
-// example array of the posible aswers 
-let exampleAnswerArr = ["Cascading style sheet", "A JavaScript library","Creating C#","A type of browser"]
-*/
+// Declaring variables
 
 let playerScore = 0;
 let timerValue = 90; //seconds
@@ -102,15 +93,37 @@ let correctAnswerIndex;
 let invervalTimer;
 const highScoreDiv = document.getElementById("highscore");
 
-function endGame(){
 
-   
-    quizDiv.innerHTML = `You scored ${playerScore}<br>
-    would you like to save?
-    <button id="saveScore">Yes</button><button onclick="location.reload();">no</button>`;
-    saveScoreBtn = document.getElementById("saveScore");
-    saveScoreBtn.addEventListener("click", saveScore)
-    stopTimer();
+// called once quiz is finnished
+
+function openSaveBox(){
+
+    quizDiv.innerHTML = "";
+
+    let saveH1 = document.createElement("h1");
+    saveH1.textContent = `You scored ${playerScore}
+    would you like to save?`
+    quizDiv.append(saveH1);
+
+
+    let btnSave = document.createElement("button");
+    btnSave.id= "save-score";
+    btnSave.textContent = "Yes"
+    quizDiv.appendChild(btnSave);
+
+    let btnRefresh = document.createElement("button");
+    btnRefresh.id= "btn-refresh";
+    btnRefresh.textContent = "No"
+    quizDiv.appendChild(btnRefresh);
+
+    
+    btnSave.addEventListener("click", openRecordScore);
+    btnRefresh.addEventListener("click", refreshQuiz);
+
+}
+
+function refreshQuiz() {
+    location.reload();
 }
 
 function startTimer(){
@@ -121,6 +134,46 @@ function startTimer(){
 function stopTimer(){
 
     clearInterval(timerInterval);
+}
+
+function endGame(){
+
+    openSaveBox();
+    stopTimer();
+
+}
+
+function openRecordScore(){
+
+    let mainDiv = document.getElementById("main");
+    mainDiv.innerHTML = "";
+
+    let divRecordIntials = document.createElement("div")
+    divRecordIntials.setAttribute("id", "div-record-highscore")
+    mainDiv.appendChild(divRecordIntials);
+    
+    let recordScoreForm = document.createElement("form");
+    recordScoreForm.setAttribute("action", "#")
+    divRecordIntials.appendChild(recordScoreForm);
+
+    let recordScoreLabel = document.createElement("label");
+    recordScoreLabel.setAttribute("for", "intials");
+    recordScoreLabel.textContent = "Please enter you intials";
+    recordScoreForm.appendChild(recordScoreLabel)
+
+    let recordScoreInput = document.createElement("input");
+    recordScoreInput.setAttribute("id", "intials");
+    recordScoreInput.setAttribute("name", "intials");
+    recordScoreInput.setAttribute("type", "text");
+    recordScoreInput.setAttribute("maxlength", "3");
+    recordScoreForm.appendChild(recordScoreInput);
+
+    let recordScoreButton = document.createElement("input");
+    recordScoreButton.setAttribute("type", "submit");
+    recordScoreButton.setAttribute("value", "Submit");
+    recordScoreForm.appendChild(recordScoreButton);
+
+    recordScoreForm.addEventListener("submit", saveScore);
 }
 
 function getRandomIndex(numberOfIndexes){
@@ -177,7 +230,7 @@ function decreaseTimer(amount = 1){
     timerValue -= amount;
     }
 
-    isTimerGreaterThenZero = timerValue >= 0;
+    isTimerGreaterThenZero = timerValue > 0;
     // decrease timer
     
     if (!isTimerGreaterThenZero){
@@ -188,12 +241,12 @@ function decreaseTimer(amount = 1){
     writeHTML("timer", `${timerValue} second(s) left.`);
 }
 
-
 function changeScore(amountToChangeBy = 0){
     playerScore += amountToChangeBy;
     writeHTML("currentScore", `Current score: ${playerScore}`);
 
 }
+
 function getHighScores(){
 
     // get high scores from local storage
@@ -211,36 +264,19 @@ function getHighScores(){
     return highScores;
 }
 
-function saveScore(){
-    
+function saveScore(event){
+    event.preventDefault();
+    console.log("saveScore");
     let highScoresArr = getHighScores();
-
-    let playerInitals = "JC";
+    let playerInitals = document.getElementById("intials").value;
     highScoresArr.unshift([playerScore, playerInitals]);
     localStorage.setItem("highScores", JSON.stringify(highScoresArr));
-   // window.localStorage
+    // window.localStorage
+
+    refreshQuiz();
+
+    
 }
-
-
-// to implement in createQandAHTML()
-function indexToLetter(index){
-    let letter = "a";
-
-    switch(index) {
-        case 1 : 
-            currentLetter = "b";
-            break;
-        case 2 : 
-            currentLetter = "c";
-            break;
-        case 3 : 
-            currentLetter = "d";
-            break;
-
-    }
-    return letter;
-}
-
 
 function letterToIndex(letter){
     let index;
@@ -372,6 +408,7 @@ function answerSelected(letterClicked){
 
 
 }
+
 function updateCurrentHighScore(){
 
     highScoresArr = getHighScores();
