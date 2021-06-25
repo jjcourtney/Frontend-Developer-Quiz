@@ -105,16 +105,19 @@ function openSaveBox(){
     would you like to save?`
     quizDiv.append(saveH1);
 
+    let contYesNo = document.createElement("div");
+    contYesNo.id= "container-y-n";
+    quizDiv.appendChild(contYesNo);
 
     let btnSave = document.createElement("button");
     btnSave.id= "save-score";
     btnSave.textContent = "Yes"
-    quizDiv.appendChild(btnSave);
+    contYesNo.appendChild(btnSave);
 
     let btnRefresh = document.createElement("button");
     btnRefresh.id= "btn-refresh";
     btnRefresh.textContent = "No"
-    quizDiv.appendChild(btnRefresh);
+    contYesNo.appendChild(btnRefresh);
 
     
     btnSave.addEventListener("click", openRecordScore);
@@ -170,6 +173,7 @@ function openRecordScore(){
 
     let recordScoreButton = document.createElement("input");
     recordScoreButton.setAttribute("type", "submit");
+    recordScoreButton.setAttribute("id", "intitals-submit");
     recordScoreButton.setAttribute("value", "Submit");
     recordScoreForm.appendChild(recordScoreButton);
 
@@ -266,12 +270,12 @@ function getHighScores(){
 
 function saveScore(event){
     event.preventDefault();
-    console.log("saveScore");
+
     let highScoresArr = getHighScores();
     let playerInitals = document.getElementById("intials").value;
     highScoresArr.unshift([playerScore, playerInitals]);
     localStorage.setItem("highScores", JSON.stringify(highScoresArr));
-    // window.localStorage
+
 
     refreshQuiz();
 
