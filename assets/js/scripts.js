@@ -99,12 +99,14 @@ const startBtn = document.getElementById("start-btn");
 const quizDiv = document.getElementById("quiz-box");
 let currentQuestionIndex;
 let correctAnswerIndex;
+const highScoreDiv = document.getElementById("highscore");
 
 function endGame(){
     quizDiv.innerHTML = `You scored ${playerScore}<br>
     would you like to save?
-    <button>Yes</button><button onclick="location.reload();">no</button>`;
-
+    <button id="saveScore">Yes</button><button onclick="location.reload();">no</button>`;
+    saveScoreBtn = document.getElementById("saveScore");
+    saveScoreBtn.addEventListener("click", saveScore)
 }
 
 function startTimer(){
@@ -150,8 +152,7 @@ function prepareQuestionReturnAnswer(){
     for (let i = 0; i < 3; i++){
 
         answersArray.unshift(incorrectAnswersArr[i])
-       
- 
+        
     }
     // place correct answer in random index
     // storing position in a global variable
@@ -180,15 +181,35 @@ function changeScore(amountToChangeBy = 0){
     writeHTML("currentScore", `Current score: ${playerScore}`);
 
 }
+function getHighScores(){
+
+    // get high scores from local storage
+    let highScores = JSON.parse(localStorage.getItem("highScores"));
+
+    // check to see if score has been saved previously
+    // if not set to an empty array
+    if (!highScores){
+
+        highScores = [];
+        localStorage.setItem("highScores", JSON.stringify(highScores)); 
+        
+    }
+  
+    return highScores;
+}
+
 function saveScore(){
+    
+    let highScoresArr = getHighScores();
+
+    let playerInitals = "JC";
+    highScoresArr.unshift([playerScore, playerInitals]);
+    localStorage.setItem("highScores", JSON.stringify(highScoresArr));
    // window.localStorage
 }
 
-function getHighScore(){
-    highScore = 0; // access local storage window.localStorage
-    return highScore;
-}
 
+// to implement in createQandAHTML()
 function indexToLetter(index){
     let letter = "a";
 
@@ -206,6 +227,7 @@ function indexToLetter(index){
     }
     return letter;
 }
+
 
 function letterToIndex(letter){
     let index;
@@ -230,14 +252,11 @@ function letterToIndex(letter){
 }
 
 function createQandAHTML(){
-    //console.log("Called createQandAHTML")
-    // startBtn.style.display = "none"; //to remove after testing
-    //console.log(prepareQuestionReturnAnswer())
+ 
     let answerArr = prepareQuestionReturnAnswer();
+    // clear previous question
     quizDiv.innerHTML = "";
     
-   
-
     let question = questionsArr[currentQuestionIndex].question; 
     // create, ammend, append
 
@@ -336,6 +355,22 @@ function answerSelected(letterClicked){
 
 
 }
+function updateCurrentHighScore(){
+
+    highScoresArr = getHighScores();
+    let tempHighScore = 0;
+    let tempHighScorePlayer = "";
+    if (highScoresArr.length != 0){
+        for (let i in highScoresArr){
+            if (highScoresArr[i][0] >= tempHighScore){
+                tempHighScore = highScoresArr[i][0];
+                tempHighScorePlayer = highScoresArr[i][1];
+            }
+        }
+
+        highScoreDiv.innerHTML = `High score: ${tempHighScore} recorded by ${tempHighScorePlayer}`;
+    }
+}
 
 function startGame(){
     startBtn.style.display = "none";
@@ -346,6 +381,8 @@ function startGame(){
 
 
 }
+
+updateCurrentHighScore()
 
 startBtn.addEventListener("click", startGame);
 
