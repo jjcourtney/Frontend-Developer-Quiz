@@ -31,8 +31,8 @@ const questionsArr =[
 },
 {
     question: "How to create a hyperlink in HTML?",
-    correctAnswer: "<a href = \"www.javatpoint.com\"> javaTpoint.com <a>",
-    incorrectAnswersArr: ["<a url = \"www.javatpoint.com\" javaTpoint.com <a>", "<a link = \"www.javatpoint.com\"> javaTpoint.com <<a>", "<a> www.javatpoint.com <javaTpoint.com <a>"]
+    correctAnswer: "<a href = \"www.realalgorithm.co.uk/\"> realalgorithm.co.uk/ <a>",
+    incorrectAnswersArr: ["<a url = \"www.realalgorithm.co.uk/\" realalgorithm.co.uk/ <a>", "<a link = \"www.realalgorithm.co.uk/\"> realalgorithm.co.uk/ <<a>", "<a> www.realalgorithm.co.uk/ <realalgorithm.co.uk/ <a>"]
 },
 {
     question: "How to create an ordered list (a list with the list items in numbers) in HTML?",
