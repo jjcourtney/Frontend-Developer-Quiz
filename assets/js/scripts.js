@@ -177,7 +177,7 @@ function decreaseTimer(amount = 1){
     timerValue -= amount;
     }
 
-    isTimerGreaterThenZero = timerValue > 0;
+    isTimerGreaterThenZero = timerValue >= 0;
     // decrease timer
     
     if (!isTimerGreaterThenZero){
